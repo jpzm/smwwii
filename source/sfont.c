@@ -30,7 +30,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SFont.h"
+#include "sfont.h"
 
 static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 {

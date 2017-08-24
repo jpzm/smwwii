@@ -1,8 +1,8 @@
 #include "global.h"
 #include <math.h>
 
-extern short x_shake;
-extern short y_shake;
+extern short unsigned int x_shake;
+extern short unsigned int y_shake;
 
 //------------------------------------------------------------------------------
 // Moving Platform
@@ -805,8 +805,8 @@ void MovingPlatform::collide(CPlayer * player)
 					player->killsinrowinair = 0;
 					player->featherjump = 0;
 
-					if((t1 == tile_ice && (t2 == tile_ice || t2 == tile_nonsolid)) ||
-						t2 == tile_ice && (t1 == tile_ice || t1 == tile_nonsolid))
+					if ((t1 == tile_ice && (t2 == tile_ice || t2 == tile_nonsolid)) ||
+					    (t2 == tile_ice && (t1 == tile_ice || t1 == tile_nonsolid)))
 						player->onice = true;
 					else
 						player->onice = false;
@@ -1191,8 +1191,8 @@ void MovingPlatform::collide(IO_MovingObject * object)
 					object->vely = object->BottomBounce();
 					object->inair = false;
 
-					if((t1 == tile_ice && (t2 == tile_ice || t2 == tile_nonsolid)) ||
-						t2 == tile_ice && (t1 == tile_ice || t1 == tile_nonsolid))
+					if ((t1 == tile_ice && (t2 == tile_ice || t2 == tile_nonsolid)) ||
+					    (t2 == tile_ice && (t1 == tile_ice || t1 == tile_nonsolid)))
 						object->onice = true;
 					else
 						object->onice = false;

@@ -104,10 +104,10 @@ class MI_Image : public UI_Control
 class MI_Text : public UI_Control
 {
 	public:
-		MI_Text(char * text, short x, short y, short w, short size, short justified);
+		MI_Text(const char * text, short x, short y, short w, short size, short justified);
 		virtual ~MI_Text();
 
-		void SetText(char * text);
+		void SetText(const char * text);
 		void Draw();
 
 	private:
@@ -153,7 +153,6 @@ class MI_IPField : public UI_Control
 
 	private:
 
-		void AssignHostAddress();
 		void MoveImage();
 
 		gfxSprite * spr;
@@ -206,7 +205,7 @@ class MI_SelectField : public UI_Control
 {
 	public:
 
-		MI_SelectField(gfxSprite * nspr, short x, short y, char * name, short width, short indent);
+		MI_SelectField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent);
 		virtual ~MI_SelectField();
 
 		void SetTitle(char * name);
@@ -291,7 +290,7 @@ class MI_ImageSelectField : public MI_SelectField
 {
 	public:
 
-		MI_ImageSelectField(gfxSprite * nspr, gfxSprite * nspr_image, short x, short y, char * name, short width, short indent, short imageHeight, short imageWidth);
+		MI_ImageSelectField(gfxSprite * nspr, gfxSprite * nspr_image, short x, short y, const char * name, short width, short indent, short imageHeight, short imageWidth);
 		virtual ~MI_ImageSelectField();
 
 		void Draw();
@@ -338,7 +337,12 @@ class MI_Button : public UI_Control
 {
 	public:
 
-		MI_Button(gfxSprite * nspr, short x, short y, char * name, short width, short justified);
+		MI_Button(gfxSprite * nspr,
+                  short x,
+                  short y,
+                  const char * name,
+                  short width,
+                  short justified);
 		~MI_Button() {}
 
 		MenuCodeEnum Modify(bool fModify);
@@ -346,14 +350,14 @@ class MI_Button : public UI_Control
 		void Draw();
 		MenuCodeEnum SendInput(CPlayerInput * playerInput);
 
-		void SetName(char * name);
+		void SetName(const char * name);
 		void SetCode(MenuCodeEnum code) {menuCode = code;}
 		void SetImage(gfxSprite * nsprImage, short x, short y, short w, short h);
 
 	protected:
 
 		gfxSprite * spr;
-		char * szName;
+		const char * szName;
 
 		short iWidth, iIndent;
 		short iTextJustified;
@@ -377,7 +381,7 @@ class MI_StoredPowerupResetButton : public MI_Button
 {
 	public:
 
-		MI_StoredPowerupResetButton(gfxSprite * nspr, short x, short y, char * name, short width, short justified);
+		MI_StoredPowerupResetButton(gfxSprite * nspr, short x, short y, const char * name, short width, short justified);
 		~MI_StoredPowerupResetButton() {}
 
 		void Draw();
@@ -462,7 +466,7 @@ class MI_PlayerSelect : public UI_Control
 {
 	public:
 
-		MI_PlayerSelect(gfxSprite * nspr, short x, short y, char * name, short width, short indent);
+		MI_PlayerSelect(gfxSprite * nspr, short x, short y, const char * name, short width, short indent);
 		virtual ~MI_PlayerSelect();
 
 		void SetImagePosition();
@@ -477,7 +481,7 @@ class MI_PlayerSelect : public UI_Control
 
 		gfxSprite * spr;
 
-		char * szName;
+		const char * szName;
 		short iWidth, iIndent;
 
 		short iSelectedPlayer;
@@ -490,7 +494,7 @@ class MI_SliderField : public MI_SelectField
 {
 	public:
 
-		MI_SliderField(gfxSprite * nspr, gfxSprite * nsprSlider, short x, short y, char * name, short width, short indent1, short indent2);
+		MI_SliderField(gfxSprite * nspr, gfxSprite * nsprSlider, short x, short y, const char * name, short width, short indent1, short indent2);
 		virtual ~MI_SliderField();
 
 		//Draws every frame
@@ -526,7 +530,7 @@ class MI_MapField : public UI_Control
 {
 	public:
 
-		MI_MapField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, bool showtags);
+		MI_MapField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, bool showtags);
 		virtual ~MI_MapField();
 
 		//Called when user selects this control to change it's value
@@ -558,7 +562,7 @@ class MI_MapField : public UI_Control
 		SDL_Surface * surfaceMapForeground;
 		SDL_Rect rectDst;
 
-		char * szName;
+		const char * szName;
 		const char * szMapName;
 		short iWidth, iIndent;
 
@@ -575,7 +579,7 @@ class MI_AnnouncerField : public UI_Control
 {
 	public:
 
-		MI_AnnouncerField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, SimpleFileList * pList);
+		MI_AnnouncerField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, SimpleFileList * pList);
 		virtual ~MI_AnnouncerField();
 
 		//Called when user selects this control to change it's value
@@ -596,7 +600,7 @@ class MI_AnnouncerField : public UI_Control
 
 		gfxSprite * spr;
 
-		char * szName;
+		const char * szName;
 		short iWidth, iIndent;
 
 		char szFieldName[256];
@@ -611,7 +615,7 @@ class MI_PacksField : public MI_AnnouncerField
 {
 	public:
 
-		MI_PacksField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, SimpleFileList * pList, MenuCodeEnum code);
+		MI_PacksField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, SimpleFileList * pList, MenuCodeEnum code);
 		virtual ~MI_PacksField();
 
 		MenuCodeEnum SendInput(CPlayerInput * playerInput);
@@ -624,7 +628,7 @@ class MI_PlaylistField : public UI_Control
 {
 	public:
 
-		MI_PlaylistField(gfxSprite * nspr, short x, short y, char * name, short width, short indent);
+		MI_PlaylistField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent);
 		virtual ~MI_PlaylistField();
 
 		//Called when user selects this control to change it's value
@@ -643,7 +647,7 @@ class MI_PlaylistField : public UI_Control
 
 		gfxSprite * spr;
 
-		char * szName;
+		const char * szName;
 		short iWidth, iIndent;
 
 		MI_Image * miModifyImageLeft;

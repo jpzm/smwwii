@@ -43,8 +43,8 @@
 extern "C" {
 #endif
 
-extern short x_shake;
-extern short y_shake;
+extern short unsigned int x_shake;
+extern short unsigned int y_shake;
 
 // Delcare one variable of this type for each font you are using.
 // To load the fonts, load the font image into YourFont->Surface

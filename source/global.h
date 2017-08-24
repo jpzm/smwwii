@@ -3,7 +3,11 @@
 #define _GLOBAL_H
 
 #define FILEBUFSIZE 1024
+#ifdef GEKKO
 #define PREFIXPATH "sd:/smw"
+#elif LINUX
+#define PREFIXPATH "/opt/smw"
+#endif
 
 //----------------------------------------------------------------
 // this file contains stuff that's needed by every part of smw
@@ -21,19 +25,15 @@
 
 #include "sfx.h"
 #include "gfx.h"
-#include "net.h"
 #include "path.h"
-
-#ifdef LINUXFUNC
-	#include "linfunc.h"
-#endif
 
 struct STextAward
 {
-	char			*name;
-	gfxFont			*font;
+    const char *name;
+    gfxFont *font;
 
-	STextAward(char *nname, gfxFont *nfont) {name = nname; font = nfont;}
+    STextAward(const char *nname, gfxFont *nfont)
+    {name = nname; font = nfont;}
 };
 
 //------------- global definitions -------------
@@ -207,7 +207,7 @@ std::string stripCreatorAndDotMap(const std::string &filename);
 #include "uimenu.h"
 #include "uicontrol.h"
 #include "menu.h"
-#include "MapList.h"
+#include "maplist.h"
 #include "movingplatform.h"
 #include "map.h"
 #include "player.h"
@@ -223,8 +223,8 @@ std::string stripCreatorAndDotMap(const std::string &filename);
 //gfx stuff
 extern SDL_Surface		*screen;		//for gfx
 extern SDL_Surface		*blitdest;		//for gfx
-extern short			x_shake;
-extern short			y_shake;
+extern short unsigned int x_shake;
+extern short unsigned int y_shake;
 
 extern CMap				g_map;
 extern CPlayer			*list_players[4];
@@ -471,12 +471,6 @@ extern short		currentgamemode;
 extern float CapFallingVelocity(float vel);
 extern float CapSideVelocity(float vel);
 
-extern int g_iNextNetworkID;
-extern int g_iNextMessageID;
-extern char szIPString[32];
-//extern NetServer netServer;
-//extern NetClient netClient;
-
 extern short g_iDefaultPowerupWeights[];
 
 //----------------- game options all parts of the game need -----------
@@ -703,11 +697,6 @@ struct gv
 
 	short		cputurn;
 	short		cpudifficulty;
-
-	short		networktype;		//Type of network game: 0=stand alone, 1=direct connect
-	bool		networkhost;		//If this machine is the one making collision detection and game state changes
-	bool		gamehost;			//If this client is responsible for choosing game type, map, options
-	char *		hostaddress;        //String form of the host ip address
 
 	CInputPlayerControl inputConfiguration[4][2]; //[NumPlayers][Keyboard/Joystick]
 

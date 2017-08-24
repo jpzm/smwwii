@@ -1245,7 +1245,7 @@ void CMap::saveThumbnail(const std::string &sFile, bool fUseClassicPack)
 {
 	SDL_Surface * sThumbnail = SDL_CreateRGBSurface(screen->flags, 160, 120, 16, 0, 0, 0, 0);
 
-	char szBackgroundFile[128];
+	char szBackgroundFile[256];
 	std::string path;
 
 	if(fUseClassicPack)
@@ -1547,7 +1547,7 @@ void CMap::drawThumbnailPlatforms(SDL_Surface * targetSurface)
 {
 	blitdest = targetSurface;
 
-	short iTileSize = 8;
+	short unsigned int iTileSize = 8;
 	//Draw platforms to screenshot
 	SDL_Rect rSrc = {0, 0, iTileSize, iTileSize};
 	SDL_Rect rDst = {0, 0, iTileSize, iTileSize};
@@ -1624,7 +1624,7 @@ void CMap::drawThumbnailPlatforms(SDL_Surface * targetSurface)
 
 void CMap::preDrawPreviewWarps(SDL_Surface * targetSurface, bool fThumbnail)
 {
-	short iTileSize = 16;
+	short unsigned int iTileSize = 16;
 	short iScreenshotSize = 0;
 
 	if(fThumbnail)
@@ -1641,8 +1641,8 @@ void CMap::preDrawPreviewWarps(SDL_Surface * targetSurface, bool fThumbnail)
 
 			if(warp->connection != -1)
 			{
-				SDL_Rect rSrc = {warp->connection * iTileSize, warp->direction * iTileSize, iTileSize, iTileSize};
-				SDL_Rect rDst = {i * iTileSize, j * iTileSize, iTileSize, iTileSize};
+				SDL_Rect rSrc = {(short int) (warp->connection * iTileSize), (short int) (warp->direction * iTileSize), iTileSize, iTileSize};
+				SDL_Rect rDst = {(short int) (i * iTileSize), (short int) (j * iTileSize), iTileSize, iTileSize};
 
 				SDL_BlitSurface(spr_thumbnail_warps[iScreenshotSize].getSurface(), &rSrc, targetSurface, &rDst);
 			}

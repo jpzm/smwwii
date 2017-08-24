@@ -106,18 +106,6 @@ MenuCodeEnum MI_IPField::SendInput(CPlayerInput * playerInput)
 			MoveImage();
 		}
 
-		if(playerInput->outputControls[iPlayer].menu_up.fPressed)
-		{
-			values[iSelectedDigit]++;
-			AssignHostAddress();
-		}
-
-		if(playerInput->outputControls[iPlayer].menu_down.fPressed)
-		{
-			values[iSelectedDigit]--;
-			AssignHostAddress();
-		}
-
 		if(playerInput->outputControls[iPlayer].menu_select.fPressed || playerInput->outputControls[iPlayer].menu_cancel.fPressed)
 		{
 			miModifyImage->Show(false);
@@ -127,26 +115,6 @@ MenuCodeEnum MI_IPField::SendInput(CPlayerInput * playerInput)
 	}
 
 	return MENU_CODE_NONE;
-}
-
-void MI_IPField::AssignHostAddress()
-{
-	if(iSelectedDigit == 0 || iSelectedDigit == 3 || iSelectedDigit == 6 || iSelectedDigit == 9)
-	{
-		if(values[iSelectedDigit] > 2)
-			values[iSelectedDigit] = 0;
-		else if(values[iSelectedDigit] < 0)
-			values[iSelectedDigit] = 2;
-	}
-	else
-	{
-		if(values[iSelectedDigit] > 9)
-			values[iSelectedDigit] = 0;
-		else if(values[iSelectedDigit] < 0)
-			values[iSelectedDigit] = 9;
-	}
-
-	game_values.hostaddress = GetValue();
 }
 
 void MI_IPField::MoveImage()
@@ -188,7 +156,7 @@ void MI_IPField::Draw()
  * MI_SelectField Class
  **************************************/
 
-MI_SelectField::MI_SelectField(gfxSprite * nspr, short x, short y, char * name, short width, short indent) :
+MI_SelectField::MI_SelectField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent) :
 	UI_Control(x, y)
 {
 	spr = nspr;
@@ -585,7 +553,7 @@ bool MI_SelectField::MoveRandom()
  * MI_ImageSelectField Class
  **************************************/
 
-MI_ImageSelectField::MI_ImageSelectField(gfxSprite * nspr, gfxSprite * nspr_image, short x, short y, char * name, short width, short indent, short imageHeight, short imageWidth) :
+MI_ImageSelectField::MI_ImageSelectField(gfxSprite * nspr, gfxSprite * nspr_image, short x, short y, const char * name, short width, short indent, short imageHeight, short imageWidth) :
 	MI_SelectField(nspr, x, y, name, width, indent)
 {
 	spr_image = nspr_image;
@@ -1634,7 +1602,7 @@ short MI_TeamSelect::GetTeam(short iPlayerID)
 /**************************************
  * MI_PlayerSelect Class
  **************************************/
-MI_PlayerSelect::MI_PlayerSelect(gfxSprite * nspr, short x, short y, char * name, short width, short indent) :
+MI_PlayerSelect::MI_PlayerSelect(gfxSprite * nspr, short x, short y, const char * name, short width, short indent) :
 	UI_Control(x, y)
 {
 	spr = nspr;
@@ -1771,7 +1739,7 @@ void MI_PlayerSelect::Draw()
  * MI_SliderField Class
  **************************************/
 
-MI_SliderField::MI_SliderField(gfxSprite * nspr, gfxSprite * nsprSlider, short x, short y, char * name, short width, short indent1, short indent2) :
+MI_SliderField::MI_SliderField(gfxSprite * nspr, gfxSprite * nsprSlider, short x, short y, const char * name, short width, short indent1, short indent2) :
 	MI_SelectField(nspr, x, y, name, width, indent1)
 {
 	iIndent2 = indent2;
@@ -1900,7 +1868,7 @@ void MI_PowerupSlider::Draw()
  * MI_MapField Class
  **************************************/
 
-MI_MapField::MI_MapField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, bool showtags) :
+MI_MapField::MI_MapField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, bool showtags) :
 	UI_Control(x, y)
 {
 	fDisable = false;
@@ -2146,7 +2114,7 @@ void MI_MapField::LoadCurrentMap()
 	g_map.loadMap(maplist.currentFilename(), read_type_preview);
 	SDL_Delay(10);  //Sleeps to help the music from skipping
 
-	char filename[128];
+	char filename[256];
 	sprintf(filename, "gfx/packs/backgrounds/%s", g_map.szBackgroundFile);
 	std::string path = convertPath(filename, gamegraphicspacklist.current_name());
 
@@ -2174,7 +2142,7 @@ void MI_MapField::SetMap(const char * szMapName)
  * MI_AnnouncerField Class
  **************************************/
 
-MI_AnnouncerField::MI_AnnouncerField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, SimpleFileList * pList) :
+MI_AnnouncerField::MI_AnnouncerField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, SimpleFileList * pList) :
 	UI_Control(x, y)
 {
 	spr = nspr;
@@ -2279,7 +2247,7 @@ void MI_AnnouncerField::Draw()
  * MI_PacksField Class
  **************************************/
 
-MI_PacksField::MI_PacksField(gfxSprite * nspr, short x, short y, char * name, short width, short indent, SimpleFileList * pList, MenuCodeEnum code) :
+MI_PacksField::MI_PacksField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent, SimpleFileList * pList, MenuCodeEnum code) :
 	MI_AnnouncerField(nspr, x, y, name, width, indent, pList)
 {
 	itemChangedCode = code;
@@ -2319,7 +2287,7 @@ MenuCodeEnum MI_PacksField::SendInput(CPlayerInput * playerInput)
  * MI_PlayListField Class
  **************************************/
 
-MI_PlaylistField::MI_PlaylistField(gfxSprite * nspr, short x, short y, char * name, short width, short indent) :
+MI_PlaylistField::MI_PlaylistField(gfxSprite * nspr, short x, short y, const char * name, short width, short indent) :
 	UI_Control(x, y)
 {
 	spr = nspr;
@@ -2430,7 +2398,12 @@ void MI_PlaylistField::Draw()
  * MI_Button Class
  **************************************/
 
-MI_Button::MI_Button(gfxSprite * nspr, short x, short y, char * name, short width, short justified) :
+MI_Button::MI_Button(gfxSprite * nspr,
+                     short x,
+                     short y,
+                     const char * name,
+                     short width,
+                     short justified) :
 	UI_Control(x, y)
 {
 	spr = nspr;
@@ -2494,7 +2467,7 @@ void MI_Button::Draw()
 	}
 }
 
-void MI_Button::SetName(char * name)
+void MI_Button::SetName(const char * name)
 {
 	szName = name;
 	iTextW = (short)menu_font_large.getWidth(name);
@@ -2513,7 +2486,7 @@ void MI_Button::SetImage(gfxSprite * nsprImage, short x, short y, short w, short
  * MI_StoredPowerupResetButton Class
  **************************************/
 
-MI_StoredPowerupResetButton::MI_StoredPowerupResetButton(gfxSprite * nspr, short x, short y, char * name, short width, short justified) :
+MI_StoredPowerupResetButton::MI_StoredPowerupResetButton(gfxSprite * nspr, short x, short y, const char * name, short width, short justified) :
 	MI_Button(nspr, x, y, name, width, justified)
 {
 	spr = nspr;
@@ -3519,7 +3492,7 @@ void MI_Image::Draw()
  * MI_Text Class
  **************************************/
 
-MI_Text::MI_Text(char * text, short x, short y, short w, short size, short justified) :
+MI_Text::MI_Text(const char * text, short x, short y, short w, short size, short justified) :
 	UI_Control(x, y)
 {
 	szText = new char[strlen(text) + 1];
@@ -3537,7 +3510,7 @@ MI_Text::MI_Text(char * text, short x, short y, short w, short size, short justi
 MI_Text::~MI_Text()
 {}
 
-void MI_Text::SetText(char * text)
+void MI_Text::SetText(const char * text)
 {
 	delete [] szText;
 	szText = new char[strlen(text) + 1];

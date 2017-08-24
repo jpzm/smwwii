@@ -14,7 +14,7 @@
 #include "global.h"
 
 using namespace std;
-char SMW_Root_Data_Dir[PATH_MAX + 2] = "";
+char *SMW_Root_Data_Dir = NULL;
 
 bool File_Exists (const std::string fileName)
 {
@@ -94,6 +94,7 @@ const string convertPath(const string& source)
 
     if (!are_paths_initialized)
 	{
+        SMW_Root_Data_Dir = (char *) malloc(PATH_MAX + 2);
 
 	#ifdef PREFIXPATH
         strcpy(SMW_Root_Data_Dir, PREFIXPATH);

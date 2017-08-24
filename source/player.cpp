@@ -2029,7 +2029,7 @@ void CPlayer::FindSpawnPoint()
 }
 
 
-void CPlayer::spawnText(char * szText)
+void CPlayer::spawnText(const char * szText)
 {
 	if(++spawntext >= 20)
 	{

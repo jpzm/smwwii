@@ -84,8 +84,6 @@ CObject::CObject(gfxSprite *nspr1, short x, short y)
 	collisionHeight = ih;
 	collisionOffsetX = 0;
 	collisionOffsetY = 0;
-
-	iNetworkID = g_iNextNetworkID++;
 }
 
 /*

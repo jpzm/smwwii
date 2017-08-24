@@ -59,8 +59,8 @@ extern "C"
 SDL_Surface		*screen;		//for gfx (maybe the gfx system should be improved -> resource manager)
 SDL_Surface		*blitdest;		//the destination surface for all drawing (can be swapped from screen to another surface)
 
-short			x_shake = 0;
-short			y_shake = 0;
+short unsigned int x_shake = 0;
+short unsigned int y_shake = 0;
 
 //------ sprites (maybe this should be done in a resource manger) ------
 gfxSprite       spr_tanooki, spr_statue;
@@ -335,14 +335,6 @@ GraphicsList gamegraphicspacklist;
 SoundsList soundpacklist;
 TourList tourlist;
 
-//Network stuff
-int g_iNextNetworkID = 0;
-int g_iNextMessageID = 0;
-char szIPString[32] = "";
-
-//NetServer netServer;
-//NetClient netClient;
-
 extern Uint8 GetScreenBackgroundFade();
 
 float CapFallingVelocity(float vel)
@@ -557,9 +549,11 @@ bool g_fAutoTest = false;
 bool g_fRecordTest = false;
 #endif
 
+#include <unistd.h>
+
+#ifdef GEKKO
 #include <fat.h>
 #include <wiiuse/wpad.h>
-#include <unistd.h>
 #include <sys/iosupport.h>
 extern const devoptab_t dotab_stdnull;
 
@@ -690,6 +684,7 @@ static void * CheckWiiEvents(void *arg)
 		usleep(5000);
 	}
 }
+#endif
 
 // ------ MAIN ------
 
@@ -704,9 +699,11 @@ int main(int argc, char *argv[])
 
 	SDL_ShowCursor(SDL_DISABLE);
 
+#ifdef GEKKO
 	// disable console
 	devoptab_list[STD_OUT] = &dotab_stdnull;
 	devoptab_list[STD_ERR] = &dotab_stdnull;
+#endif
 
 	printf("-------------------------------------------------------------------------------\n");
 	printf(" %s %s\n", TITLESTRING, VERSIONNUMBER);
@@ -716,6 +713,7 @@ int main(int argc, char *argv[])
 	gfx_init(640, 480, false);		//initialize the graphics (SDL)
 	blitdest = screen;
 
+#ifdef GEKKO
 	SYS_SetResetCallback(WiiReset);
 	SYS_SetPowerCallback(WiiPower);
 	WPAD_SetPowerButtonCallback(WiiPowerButton);
@@ -723,6 +721,7 @@ int main(int argc, char *argv[])
 
 	lwp_t wiieventthread = LWP_THREAD_NULL;
 	LWP_CreateThread (&wiieventthread, CheckWiiEvents, NULL, NULL, 0, 78);
+#endif
 
 	filterslist.init(convertPath("filters/"), ".txt");
 	maplist.init();
@@ -1020,25 +1019,26 @@ int main(int argc, char *argv[])
 	//Read saved settings from disk
 	FILE *fp = NULL;
 
+#ifdef GEKKO
 	fp = fopen("sd:/smw/options.bin", "rb");
-/*
-#ifdef _XBOX
-	fp = fopen("D:\\options.bin", "rb");
+#elif _XBOX
+    fp = fopen("D:\\options.bin", "rb");
 #else
-#ifdef PREFIXPATH
-	char * folder=getenv("HOME");
-#ifdef __MACOSX__
-	std::string optionsbin=std::string(folder)+
-		std::string("/Library/Preferences/smw.options.bin");
-#else
-    std::string optionsbin=std::string(folder)+std::string("/.smw.options.bin");
+    #ifdef PREFIXPATH
+	    char *folder = getenv("HOME");
+        #ifdef __MACOSX__
+	        std::string optionsbin = std::string(folder) +
+                std::string("/Library/Preferences/smw.options.bin");
+        #else
+            std::string optionsbin = std::string(folder) +
+                std::string("/.smw.options.bin");
+        #endif
+        fp = fopen(optionsbin.c_str(), "rb");
+    #else
+	    fp = fopen("options.bin", "rb");
+    #endif
 #endif
-    fp = fopen(optionsbin.c_str(), "rb");
-#else
-	fp = fopen("options.bin", "rb");
-#endif
-#endif
-*/
+
 	if(fp != NULL)
 	{
 		short version[4];
@@ -1178,8 +1178,10 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+#ifdef GEKKO
     WII_ChangeSquare( 300, 225, 0, 0 );
     WII_VideoStart();
+#endif
 
 	//Load the gfx color palette
 	gfx_loadpalette();
@@ -2548,7 +2550,7 @@ void RunGame()
 				else if(bossgamemode->GetBossType() == 2)
 					g_map.loadMap(convertPath("maps/special/volcano.map"), read_type_full);
 
-				char filename[128];
+				char filename[256];
 				sprintf(filename, "gfx/packs/backgrounds/%s", g_map.szBackgroundFile);
 				std::string path = convertPath(filename, gamegraphicspacklist.current_name());
 

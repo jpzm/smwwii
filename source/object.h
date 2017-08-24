@@ -27,7 +27,6 @@ class CObject
 		void yf(float yf){fy = yf; if(fy < 0.0f) iy = (short)(fy - 1.0f); else iy = (short)fy;};
 		void yi(short yi){iy = yi; fy = (float)iy;};
 
-		int iNetworkID;
 		short ix, iy;
 
 		short collisionWidth;

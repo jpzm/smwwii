@@ -65,7 +65,9 @@ class CGameMode
 		char szGoalName[64];
 		SModeOption modeOptions[GAMEMODE_NUM_OPTIONS];
 
-		void SetupModeStrings(char * szMode, char * szGoal, short iGoalSpacing);
+		void SetupModeStrings(const char * szMode,
+                              const char * szGoal,
+                              short iGoalSpacing);
 
 		CPlayer * GetHighestScorePlayer(bool fGetLowest);
 

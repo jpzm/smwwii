@@ -36,8 +36,8 @@ Uint8 * colorcodes[3];
 Uint8 * colorschemes[4][NUM_SCHEMES][3];
 short numcolors = 0;
 
-extern short x_shake;
-extern short y_shake;
+extern short unsigned int x_shake;
+extern short unsigned int y_shake;
 
 //gfx_init
 bool gfx_init(int w, int h, bool fullscreen)
@@ -93,21 +93,23 @@ bool gfx_loadpalette()
 
 	numcolors = (short)palette->w;
 
-	for(int k = 0; k < 3; k++)
+	for (int k = 0; k < 3; k++)
 	{
 		colorcodes[k] = new Uint8[numcolors];
 
-		for(int i = 0; i < 4; i++)
-			for(int j = 0; j < NUM_SCHEMES; j++)
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < NUM_SCHEMES; j++)
 				colorschemes[i][j][k] = new Uint8[numcolors];
 	}
 
-	if(SDL_MUSTLOCK(palette))
+	if (SDL_MUSTLOCK(palette))
+    {
 		SDL_LockSurface(palette);
+    }
 
 	int counter = 0;
 
-	for(int k = 0; k < numcolors; k++)
+	for (int k = 0; k < numcolors; k++)
 	{
 		colorcodes[0][k] = ((Uint8*)palette->pixels)[counter++];
 		colorcodes[1][k] = ((Uint8*)palette->pixels)[counter++];
@@ -116,11 +118,11 @@ bool gfx_loadpalette()
 
 	counter += palette->pitch - palette->w * 3;
 
-	for(int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		for(int j = 0; j < NUM_SCHEMES; j++)
+		for (int j = 0; j < NUM_SCHEMES; j++)
 		{
-			for(int m = 0; m < numcolors; m++)
+			for (int m = 0; m < numcolors; m++)
 			{
 #if (SDL_BYTEORDER==SDL_BIG_ENDIAN)
 				colorschemes[i][j][2][m] = ((Uint8*)palette->pixels)[counter++];
@@ -138,7 +140,9 @@ bool gfx_loadpalette()
 	}
 
     if (SDL_MUSTLOCK(palette))
+    {
         SDL_UnlockSurface(palette);
+    }
 
 	SDL_FreeSurface(palette);
 
@@ -823,7 +827,7 @@ void gfxFont::drawRightJustified(int x, int y, const char *s, ...)
 };
 
 
-void gfxFont::drawf(int x, int y, char *s, ...)
+void gfxFont::drawf(int x, int y, const char *s, ...)
 {
 	char buffer[256];
 

@@ -329,8 +329,8 @@ void CPlayerAI::Think(COutputControl * playerKeys)
 							player->ix - ix < 90 && player->ix - ix > -90)
 						{
 							//And we are facing toward that player, throw the star
-							if((player->ix > ix && pPlayer->IsPlayerFacingRight()) ||
-								player->ix < ix && !pPlayer->IsPlayerFacingRight())
+							if ((player->ix > ix && pPlayer->IsPlayerFacingRight()) ||
+                                (player->ix < ix && !pPlayer->IsPlayerFacingRight()))
 							{
 								pPlayer->throw_star = 30;
 								playerKeys->game_turbo.fDown = false;
@@ -352,8 +352,8 @@ void CPlayerAI::Think(COutputControl * playerKeys)
 						abs(player->ix - ix) < 150)
 					{
 						//And we are facing toward that player, throw the projectile
-						if((player->ix > ix && pPlayer->IsPlayerFacingRight()) ||
-							player->ix < ix && !pPlayer->IsPlayerFacingRight())
+						if ((player->ix > ix && pPlayer->IsPlayerFacingRight()) ||
+							(player->ix < ix && !pPlayer->IsPlayerFacingRight()))
 						{
 							playerKeys->game_turbo.fDown = false;
 						}

@@ -1,6 +1,11 @@
+#ifndef _SFX_H
+#define _SFX_H
+
 #include "SDL_mixer.h"
 #include "SDL.h"
 #include <string>
+
+extern char *SMW_Root_Data_Dir;
 
 #define NUM_SOUND_CHANNELS 16
 
@@ -63,4 +68,6 @@ class sfxMusic
 		bool paused;
 		bool ready;
 };
+
+#endif
 

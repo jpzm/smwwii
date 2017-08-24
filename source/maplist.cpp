@@ -1,4 +1,3 @@
-
 #ifdef _XBOX
 	#include <xtl.h>
 #endif
@@ -22,15 +21,17 @@ using std::string;
 
 extern short g_iVersion[];
 
-char * lowercase(char * name)
+#ifdef LINUX
+char *strlwr(char *str)
 {
-	for(unsigned int k = 0; k < strlen(name); k++)
-	{
-		name[k] = (char)tolower(name[k]);
-	}
+    char *p = str;
 
-	return name;
+    for (; *p; p++)
+        *p = tolower(*p);
+
+    return str;
 }
+#endif
 
 MapListNode::MapListNode(std::string fullName)
 {
@@ -399,10 +400,10 @@ void MapList::ReadFilters()
 		short iReadState = 0;
 		while(fgets(buffer, 256, fp))
 		{
-			if(buffer[0] == '#' || buffer[0] == '\n' || buffer[0] == '\r' || buffer[0] == ' ' || buffer[0] == '\t')
+			if (buffer[0] == '#' || buffer[0] == '\n' || buffer[0] == '\r' || buffer[0] == ' ' || buffer[0] == '\t')
 				continue;
 
-			if(0 == iReadState)
+			if (0 == iReadState)
 			{
 				char * psz = strtok(buffer, ".\n");
 				if(psz)
@@ -707,7 +708,7 @@ bool SimpleDirectoryList::init(const std::string &path)
 	}
 	if(filelist.empty())
 	{
-		printf("ERROR: Empty directory.  %s\n", path.c_str());
+		printf("ERROR: Empty directory. %s\n", path.c_str());
 		sleep(5);
 		//exit(0);
 

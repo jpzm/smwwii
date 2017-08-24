@@ -1,10 +1,13 @@
 #include "sfx.h"
+
 #include <iostream>
 #include <string>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <malloc.h>
+#ifdef GEKKO
 #include <ogc/cache.h>
+#endif
 using namespace std;
 
 #ifdef _WIN32
@@ -185,17 +188,19 @@ sfxMusic::~sfxMusic()
 
 static bool musicLoaded = false;
 
-static char musicFileList[9][50] =
+#define MUSIC_PATH_MAX 41
+
+static char musicFileList[9][MUSIC_PATH_MAX + 1] =
 {
-	"sd:/smw/music/Standard/M1_Underground.mp3",
-	"sd:/smw/music/Standard/M2_Level1.mp3",
-	"sd:/smw/music/Standard/M3_Boss.mp3",
-	"sd:/smw/music/Standard/M3_Underwater.mp3",
-	"sd:/smw/music/Standard/smb3level1.mp3",
-	"sd:/smw/music/Standard/Menu/menu.mp3",
-	"sd:/smw/music/Standard/Menu/tournamentmenu.mp3",
-	"sd:/smw/music/Standard/Special/stageclear.mp3",
-	"sd:/smw/music/Standard/Special/tournamentover.mp3"
+	"music/Standard/M1_Underground.mp3",
+	"music/Standard/M2_Level1.mp3",
+	"music/Standard/M3_Boss.mp3",
+	"music/Standard/M3_Underwater.mp3",
+	"music/Standard/smb3level1.mp3",
+	"music/Standard/Menu/menu.mp3",
+	"music/Standard/Menu/tournamentmenu.mp3",
+	"music/Standard/Special/stageclear.mp3",
+	"music/Standard/Special/tournamentover.mp3"
 };
 
 static Uint8 *musicBuffer[9];
@@ -203,20 +208,38 @@ static SDL_RWops *musicRW[9];
 
 bool sfxMusic::load(const string& filename)
 {
+    char *musicfile;
 	int i = 0;
 	int j = -1;
 
+    musicfile = (char *) malloc(strlen(SMW_Root_Data_Dir) +
+                                MUSIC_PATH_MAX + 1);
+
 	if (!musicLoaded)
 	{
-		for(i=0; i < 9; i++)
+		for (i = 0; i < 9; i++)
 		{
-			 // read in entire file
-			FILE *fp = fopen(musicFileList[i], "r");
-			if (!fp) return false;
+			// read in entire file
+            strcpy(musicfile, SMW_Root_Data_Dir);
+            strcat(musicfile, musicFileList[i]);
+			FILE *fp = fopen(musicfile, "r");
+
+			if (!fp)
+                return false;
+
 			struct stat fileinfo;
+
+#ifdef GEKKO
 			fstat(fp->_file, &fileinfo);
+#elif LINUX
+			fstat(fp->_fileno, &fileinfo);
+#endif
 			int size = fileinfo.st_size;
-			musicBuffer[i] = (Uint8 *)memalign(32, size);
+#ifdef ARCH64
+			musicBuffer[i] = (Uint8 *) memalign(64, size);
+#else
+			musicBuffer[i] = (Uint8 *) memalign(32, size);
+#endif
 			fread(musicBuffer[i], 1, size, fp);
 			fclose(fp);
 
@@ -229,13 +252,21 @@ bool sfxMusic::load(const string& filename)
 		reset();
 
 	// find matching file
-	for(i=0; i < 9; i++)
+	for (i = 0; i < 9; i++)
 	{
-		if(strcmp(filename.c_str(), musicFileList[i]) == 0)
+        strcpy(musicfile, SMW_Root_Data_Dir);
+        strcat(musicfile, musicFileList[i]);
+
+		if (strcmp(filename.c_str(), musicfile) == 0)
+        {
 			j = i;
+            break;
+        }
 	}
 
-	if(j == -1)
+    free(musicfile);
+
+	if (j == -1)
 		return false;
 
     cout << "load "<< filename<< "..."<< endl;
@@ -245,7 +276,7 @@ bool sfxMusic::load(const string& filename)
 	// load into mixer
 	music = Mix_LoadMUS_RW(musicRW[j]);
 
-	if(!music)
+	if (!music)
 	{
 	    printf("Error Loading Music: %s\n", Mix_GetError());
 		return false;
@@ -261,7 +292,9 @@ bool sfxMusic::load(const string& filename)
 void sfxMusic::play(bool fPlayonce, bool fResume)
 {
 	if(!music)
+    {
 		return;
+    }
 	Mix_PlayMusic(music, (fPlayonce ? 0 : -1));
 	fResumeMusic = fResume;
 }
