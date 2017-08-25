@@ -31,3 +31,4 @@ Although this is mainly for debug purpose, the Linux version is also fully funct
 
 In this Wii port I tried to modify the original code only to improve performance and stability.
 Therefore, the game itself should be credited to Michael Schaffer and Florian Hufsky (original authors).
+Also, the included `icon.png` file was created by [NeoRame](http://neorame.de/pre/).

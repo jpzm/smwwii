@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <app version="1">
-  <name>Super Mario War Wii</name>
-  <coder>Tantric</coder>
-  <version>1.2</version>
-  <release_date>20090604</release_date>
+  <name>SMWWii (Super Mario War port for Wii)</name>
+  <coder>M. Schaffer, F. Hufsky, Tantric, J. Medeiros</coder>
+  <version>1.7.1 (0.1.0 for Wii)</version>
+  <release_date>20170825</release_date>
   <short_description>Port of Super Mario War</short_description> 
-  <long_description>Port of Super Mario War for Nintendo Wii.
-Based on Super Mario War version 1.7.</long_description> 
+  <long_description>
+Port of Super Mario War for Nintendo Wii.
+Based on Super Mario War version 1.7 AFE.
+This Nintendo Wii port was developed by J. Medeiros
+(http://github.com/jpzm/smwwii).
+  </long_description> 
 </app>
