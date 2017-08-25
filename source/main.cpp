@@ -1241,10 +1241,8 @@ int main(int argc, char *argv[])
 
     sfx_close();
 	gfx_close();
-	//net_close();
 
-	//netServer.cleanup();
-	//netClient.cleanup();
+	delete bossgamemode;
 
 	//Delete player skins
 	for(short k = 0; k < 4; k++)
@@ -1266,12 +1264,15 @@ int main(int argc, char *argv[])
 	delete [] game_values.pfFilters;
 	delete [] game_values.piFilterIcons;
 
+    Clear_Path();
+
 //Return to dash on xbox
 #ifdef _XBOX
 	LD_LAUNCH_DASHBOARD LaunchData = { XLD_LAUNCH_DASHBOARD_MAIN_MENU };
 	XLaunchNewImage( NULL, (LAUNCH_DATA*)&LaunchData );
 #endif
 
+    SDL_Quit();
 	return 0;
 }
 

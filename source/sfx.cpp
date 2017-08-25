@@ -33,11 +33,6 @@ bool sfx_init()
     return true;
 }
 
-void sfx_close()
-{
-	Mix_CloseAudio();
-}
-
 void sfx_stopallsounds()
 {
 	Mix_HaltChannel(-1);
@@ -64,7 +59,9 @@ sfxSound::sfxSound()
 }
 
 sfxSound::~sfxSound()
-{}
+{
+    reset();
+}
 
 bool sfxSound::init(const string& filename)
 {
@@ -184,97 +181,24 @@ sfxMusic::sfxMusic()
 }
 
 sfxMusic::~sfxMusic()
-{}
-
-static bool musicLoaded = false;
-
-#define MUSIC_PATH_MAX 41
-
-static char musicFileList[9][MUSIC_PATH_MAX + 1] =
 {
-	"music/Standard/M1_Underground.mp3",
-	"music/Standard/M2_Level1.mp3",
-	"music/Standard/M3_Boss.mp3",
-	"music/Standard/M3_Underwater.mp3",
-	"music/Standard/smb3level1.mp3",
-	"music/Standard/Menu/menu.mp3",
-	"music/Standard/Menu/tournamentmenu.mp3",
-	"music/Standard/Special/stageclear.mp3",
-	"music/Standard/Special/tournamentover.mp3"
-};
+    reset();
+}
 
-static Uint8 *musicBuffer[9];
-static SDL_RWops *musicRW[9];
+void sfx_close()
+{
+    Mix_AllocateChannels(0);
+	Mix_CloseAudio();
+}
 
 bool sfxMusic::load(const string& filename)
 {
-    char *musicfile;
-	int i = 0;
-	int j = -1;
+    printf("request %s ...\n", filename.c_str());
 
-    musicfile = (char *) malloc(strlen(SMW_Root_Data_Dir) +
-                                MUSIC_PATH_MAX + 1);
-
-	if (!musicLoaded)
-	{
-		for (i = 0; i < 9; i++)
-		{
-			// read in entire file
-            strcpy(musicfile, SMW_Root_Data_Dir);
-            strcat(musicfile, musicFileList[i]);
-			FILE *fp = fopen(musicfile, "r");
-
-			if (!fp)
-                return false;
-
-			struct stat fileinfo;
-
-#ifdef GEKKO
-			fstat(fp->_file, &fileinfo);
-#elif LINUX
-			fstat(fp->_fileno, &fileinfo);
-#endif
-			int size = fileinfo.st_size;
-#ifdef ARCH64
-			musicBuffer[i] = (Uint8 *) memalign(64, size);
-#else
-			musicBuffer[i] = (Uint8 *) memalign(32, size);
-#endif
-			fread(musicBuffer[i], 1, size, fp);
-			fclose(fp);
-
-			// put into SDL RW structure
-			musicRW[i] = SDL_RWFromMem(musicBuffer[i], size);
-		}
-	}
-
-	if(music)
+	if (music)
 		reset();
 
-	// find matching file
-	for (i = 0; i < 9; i++)
-	{
-        strcpy(musicfile, SMW_Root_Data_Dir);
-        strcat(musicfile, musicFileList[i]);
-
-		if (strcmp(filename.c_str(), musicfile) == 0)
-        {
-			j = i;
-            break;
-        }
-	}
-
-    free(musicfile);
-
-	if (j == -1)
-		return false;
-
-    cout << "load "<< filename<< "..."<< endl;
-    // streaming music from a file seems to crash after awhile - libfat issue?
-	//music = Mix_LoadMUS(filename.c_str());
-
-	// load into mixer
-	music = Mix_LoadMUS_RW(musicRW[j]);
+	music = Mix_LoadMUS(filename.c_str());
 
 	if (!music)
 	{
@@ -322,8 +246,9 @@ void sfxMusic::sfx_pause()
 
 void sfxMusic::reset()
 {
-	if(music)
+	if (music)
 		Mix_FreeMusic(music);
+
 	music = NULL;
 	ready = false;
 }

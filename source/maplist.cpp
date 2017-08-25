@@ -87,6 +87,8 @@ bool MapList::init()
 	while(d(curname))
 	{
 		MapListNode * node = new MapListNode(d.fullName(curname));
+        if (maps.find(stripCreatorAndDotMap(curname)) != maps.end())
+            delete maps[stripCreatorAndDotMap(curname)];
 		maps[stripCreatorAndDotMap(curname)] = node;
 	}
 
@@ -186,11 +188,11 @@ bool MapList::findexact(const char * name)
 		if(!strcmp(szCurrentName, szLookForName))
 			fFound = true;
 
-		free(szCurrentName);
+		delete[] szCurrentName;
 	}
 	while(current != oldCurrent && !fFound);
 
-	free(szLookForName);
+	delete[] szLookForName;
 
 	return fFound;
 }
@@ -560,6 +562,10 @@ std::map<std::string, MapListNode*>::iterator MapList::GetIteratorAt(unsigned sh
 }
 
 ///////////// SimpleFileList ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SimpleFileList::~SimpleFileList()
+{
+    filelist.clear();
+}
 
 bool SimpleFileList::init(const std::string &path, const std::string &extension)
 {
@@ -640,7 +646,13 @@ SkinListNode::SkinListNode(std::string skinName, std::string skinPath)
 
 SkinList::SkinList()
 {
+}
 
+SkinList::~SkinList()
+{
+    for (auto const &value: skins)
+        delete value;
+    skins.clear();
 }
 
 bool SkinList::init()
@@ -732,6 +744,15 @@ MusicList::~MusicList()
 	{
 		delete entries[i];
 	}
+}
+
+MusicEntry::~MusicEntry()
+{
+    for (auto const &ent : mapoverride)
+        delete ent.second;
+
+    for (auto const &ent : backgroundoverride)
+        delete ent.second;
 }
 
 bool MusicList::init()
@@ -912,12 +933,18 @@ MusicEntry::MusicEntry(const std::string & musicdirectory)
 				if(iAddToCategory == MAXMUSICCATEGORY)
 				{
 					if(mapoverride.find(pszName) == mapoverride.end())
+                    {
+                        delete mapoverride[pszName];
 						mapoverride[pszName] = new MusicOverride();
+                    }
 				}
 				else
 				{
 					if(backgroundoverride.find(pszName) == backgroundoverride.end())
+                    {
+                        delete backgroundoverride[pszName];
 						backgroundoverride[pszName] = new MusicOverride();
+                    }
 				}
 
 				char * pszMusic = strtok(NULL, ",\n");

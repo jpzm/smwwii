@@ -86,7 +86,7 @@ class SimpleFileList
 {
     public:
 		SimpleFileList() {;};
-        virtual ~SimpleFileList(){;};	//i have no idea how to do that virtual destructor crap right. i guess this might do it.
+        virtual ~SimpleFileList();
         bool init(const std::string &path, const std::string &extension);
 		const char * GetIndex(unsigned int index);
         int GetCount() {return filelist.size();}
@@ -149,6 +149,7 @@ class SkinList
 {
     public:
         SkinList();
+        ~SkinList();
 		bool init();
 		int GetCount() {return skins.size();}
 		const char * GetIndex(unsigned int index);
@@ -192,7 +193,7 @@ class MusicEntry
 {
     public:
         MusicEntry(const std::string & musicdirectory);
-		~MusicEntry() {}
+		~MusicEntry();
 
         std::string GetMusic(unsigned int musicID);
         std::string GetRandomMusic(int iCategoryID, const char * szMapName, const char * szBackground);

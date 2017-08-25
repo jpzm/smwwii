@@ -74,6 +74,13 @@ void Initialize_Paths()
 /*********************************************************************
   All filenames should go through this                      *********/
 
+void Clear_Path(void)
+{
+    if (SMW_Root_Data_Dir)
+        free(SMW_Root_Data_Dir);
+    SMW_Root_Data_Dir = NULL;
+}
+
 const string convertPath(const string& source)
 {
 	string s;

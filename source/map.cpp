@@ -57,6 +57,7 @@ CMap::~CMap()
 			tilesetsurface[iTileSet] = NULL;
 		}
 	}
+    clearPlatforms();
 }
 
 

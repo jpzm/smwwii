@@ -190,7 +190,7 @@ class SF_ListItem
 			fHidden = fhidden;
 		}
 
-		~SF_ListItem();
+		~SF_ListItem() {}
 
 		std::string sName;  //Display name
 
@@ -232,7 +232,12 @@ class MI_SelectField : public UI_Control
 
 		//Adds an item to the list
 		void Add(std::string name, short ivalue, std::string svalue, bool fvalue, bool fhidden);
-		void Clear() {items.clear();}
+		void Clear()
+        {
+            for (auto const &value: items)
+                delete value;
+            items.clear();
+        }
 
 		bool HideItem(short iID, bool fhide);
 		void HideAllItems(bool fHide);
@@ -805,7 +810,7 @@ class MFS_ListItem
 			fSelected = fselected;
 		}
 
-		~MFS_ListItem();
+		~MFS_ListItem() {}
 
 		std::string sName;  //Display name
 		short iIcon;		//Icon to display with name

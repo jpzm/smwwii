@@ -190,6 +190,7 @@ MI_SelectField::~MI_SelectField()
 {
 	delete miModifyImageLeft;
 	delete miModifyImageRight;
+    Clear(); // clear items
 }
 
 void MI_SelectField::SetTitle(char * name)
@@ -1909,6 +1910,8 @@ MI_MapField::~MI_MapField()
 {
 	delete miModifyImageLeft;
 	delete miModifyImageRight;
+    SDL_FreeSurface(surfaceMapBackground);
+    SDL_FreeSurface(surfaceMapForeground);
 }
 
 MenuCodeEnum MI_MapField::Modify(bool modify)
@@ -2555,6 +2558,9 @@ MI_TourStop::~MI_TourStop()
 	delete miPointsField;
 	delete miMapField;
 	delete miStartButton;
+    delete miTourStopLeftHeaderBar;
+    delete miTourStopMenuRightHeaderBar;
+    delete miTourStopMenuHeaderText;
 }
 
 MenuCodeEnum MI_TourStop::Modify(bool fModify)
@@ -2689,6 +2695,7 @@ void MI_TournamentScoreboard::FreeScoreboard()
 	}
 
 
+    delete [] miTeamImages;
 	delete [] miPlayerImages;
 	delete [] miIconImages;
 }
@@ -3063,6 +3070,8 @@ MI_BonusWheel::~MI_BonusWheel()
 
 		delete [] miPlayerImages;
 	}
+
+    delete miContinueButton;
 }
 
 MenuCodeEnum MI_BonusWheel::Modify(bool fModify)
@@ -3508,7 +3517,9 @@ MI_Text::MI_Text(const char * text, short x, short y, short w, short size, short
 }
 
 MI_Text::~MI_Text()
-{}
+{
+    delete[] szText;
+}
 
 void MI_Text::SetText(const char * text)
 {
@@ -3616,7 +3627,11 @@ MI_MapFilterScroll::MI_MapFilterScroll(gfxSprite * nspr, short x, short y, short
 }
 
 MI_MapFilterScroll::~MI_MapFilterScroll()
-{}
+{
+    for (auto const &value: items)
+        delete value;
+    items.clear();
+}
 
 void MI_MapFilterScroll::Add(std::string name, short icon)
 {

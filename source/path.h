@@ -8,6 +8,8 @@
 
 /* Call Initialize_Paths() when your application launches */
 
+void Clear_Path(void);
+
 bool File_Exists (const std::string fileName);
 /* All filenames must go through this door */
 #define convertPathC(s) convertPath(s).c_str()

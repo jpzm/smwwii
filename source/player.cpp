@@ -43,7 +43,6 @@ CPlayer::CPlayer(short iGlobalID, short iLocalID, short iTeamID, short iSubTeamI
 	powerupused = -1;
 
 	respawncounter = respawn;
-	SetupNewPlayer();
 	*respawncounter = 0;
 
 	fAcceptingItem = false;
@@ -55,6 +54,8 @@ CPlayer::CPlayer(short iGlobalID, short iLocalID, short iTeamID, short iSubTeamI
 	konamiIndex = 0;
 	secret_spring_index = 0;
 	secret_spike_index = 0;
+
+	SetupNewPlayer();
 }
 
 CPlayer::~CPlayer()

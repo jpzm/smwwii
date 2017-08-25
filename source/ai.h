@@ -53,7 +53,10 @@ class NearestObjects
 class CPlayerAI
 {
 	public:
-		CPlayerAI() {}
+		CPlayerAI()
+        {
+            iFallDanger = 0;
+        }
 		virtual ~CPlayerAI() {}
 
 		void SetPlayer(CPlayer * player) {pPlayer = player;}
